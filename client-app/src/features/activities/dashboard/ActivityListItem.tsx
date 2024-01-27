@@ -1,7 +1,8 @@
-import { Button, Icon, Item, ItemGroup, Segment, SegmentGroup } from "semantic-ui-react";
+import { Button, Icon, Item, ItemGroup, Label, Segment, SegmentGroup } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
+import AcitivityListItemAttendee from "./AcitivityListItemAttendee";
 
 interface Props {
     activity: Activity
@@ -12,14 +13,31 @@ export default function ActivityListItem({activity}: Props){
     return(
         <SegmentGroup>
             <Segment>
+                {activity.isCancelled &&
+                    <Label attached="top" color="red" content='Cancelled' style={{textAlign: 'center'}} />
+                }
                 <ItemGroup>
                     <Item>
-                        <Item.Image size="tiny" circular src= '/assets/user.png' />
+                        <Item.Image style={{marginBottom: 4}} size="tiny" circular src= '/assets/user.png' />
                         <Item.Content>
                             <Item.Header as={Link} to={`/activities/${activity.id}`}>
                                 {activity.title}
                             </Item.Header>
-                            <Item.Description>Host by Mark</Item.Description>
+                            <Item.Description>Host by {activity.host?.displayName}</Item.Description>
+                            {activity.isHost && (
+                                <Item.Description>
+                                    <Label basic color="orange" >
+                                        You are hosting this activity
+                                    </Label>
+                                </Item.Description>
+                            )}
+                            {activity.isGoing && !activity.isHost &&(
+                                <Item.Description>
+                                    <Label basic color="green" >
+                                        You are going to this activity
+                                    </Label>
+                                </Item.Description>
+                            )}
                         </Item.Content>
                     </Item>
                 </ItemGroup>
@@ -31,7 +49,7 @@ export default function ActivityListItem({activity}: Props){
                 </span>
             </Segment>
             <Segment secondary>
-                Attendees go here
+                <AcitivityListItemAttendee attendees={activity.attendees!} />
             </Segment>
             <Segment clearing>
                 <span>{activity.description}</span>
