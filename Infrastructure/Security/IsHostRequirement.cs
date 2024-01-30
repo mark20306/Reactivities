@@ -16,7 +16,7 @@ namespace Infrastructure.Security
         private readonly DataContext _dbContext;
         public IsHostRequirementHandler(DataContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext; 
             _httpContextAccessor = httpContextAccessor;
         }
 
