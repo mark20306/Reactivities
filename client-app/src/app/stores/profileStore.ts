@@ -1,5 +1,5 @@
 import { makeAutoObservable, reaction, runInAction } from "mobx";
-import { Photo, Profile } from "../models/profile";
+import { Photo, Profile, UserActivity } from "../models/profile";
 import agent from "../api/agent";
 import { store } from "./store";
 import { Portal } from "semantic-ui-react";
@@ -12,6 +12,8 @@ export default class ProfileStore {
     followings: Profile[] = [];
     loadingFollowings = false;
     activeTab = 0;
+    userActivities: UserActivity[] = [];
+    loadingActivities = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -137,7 +139,7 @@ export default class ProfileStore {
         }
     }
 
-    loadFollowings =async (predicate: string) => {
+    loadFollowings = async (predicate: string) => {
         this.loadingFollowings = true;
         try {
             const followings = await agent.Profiles.listFollowings(this.profile!.username, predicate);
@@ -148,6 +150,20 @@ export default class ProfileStore {
         } catch (error) {
             console.log(error);
             runInAction(() => this.loadingFollowings = false);
+        }
+    }
+
+    loadUserActivities = async (username: string, predicate?: string) => {
+        this.loadingActivities = true;
+        try {
+            const activities = await agent.Profiles.listActivities(username, predicate!);
+            runInAction(() => {
+                this.userActivities = activities;
+                this.loadingActivities = false;
+            })
+        } catch (error) {
+            console.log(error)
+            runInAction(() => this.loadingActivities = false);
         }
     }
 }
