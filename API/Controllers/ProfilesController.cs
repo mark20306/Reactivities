@@ -1,4 +1,5 @@
 using Application.Profiles;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -15,6 +16,12 @@ namespace API.Controllers
         public async Task<IActionResult> GetUserActivities(string predicate, string username)
         {
             return HandleResult(await Mediator.Send(new ListActivities.Query{Predicate = predicate, Username = username}));
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Edit(Edit.Command command)
+        {
+            return HandleResult(await Mediator.Send(command));
         }
     }
 }
