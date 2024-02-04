@@ -2,7 +2,6 @@ import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { Photo, Profile, UserActivity } from "../models/profile";
 import agent from "../api/agent";
 import { store } from "./store";
-import { Portal } from "semantic-ui-react";
 
 export default class ProfileStore {
     profile: Profile | null = null;
